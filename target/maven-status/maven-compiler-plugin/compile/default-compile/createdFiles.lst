@@ -1,0 +1,10 @@
+com\example\shiro\controller\AccountController.class
+com\example\shiro\shiro\ShiroSessionManager.class
+com\example\shiro\vo\UserInfo.class
+com\example\shiro\shiro\ShiroRealm.class
+com\example\shiro\shiro\ShiroConfiguration.class
+com\example\shiro\controller\UserController.class
+com\example\shiro\ShiroApplication.class
+com\example\shiro\shiro\ShiroUtil.class
+com\example\shiro\shiro\ShiroFormAuthenticationFilter.class
+com\example\shiro\service\UserService.class
