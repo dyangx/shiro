@@ -1,2 +1,7 @@
 server:
   port: 8082
+
+shiro:
+  redis:
+    host: 152.136.189.20:6379
+    password: password

@@ -12,9 +12,12 @@ import org.crazycake.shiro.RedisCacheManager;
 import org.crazycake.shiro.RedisManager;
 import org.crazycake.shiro.RedisSessionDAO;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.core.env.Environment;
 
 import javax.servlet.Filter;
 import java.util.ArrayList;
@@ -23,6 +26,14 @@ import java.util.Map;
 
 @Configuration
 public class ShiroConfiguration {
+
+    private String redisHost;
+    private String redisPassword;
+
+    public void init(Environment e){
+        redisHost = e.getProperty("shiro.redis.host");
+        redisPassword = e.getProperty("shiro.redis.password");
+    }
 
     @Bean
     public ShiroFilterFactoryBean shiroFilter(org.apache.shiro.mgt.SecurityManager securityManager){
@@ -63,7 +74,8 @@ public class ShiroConfiguration {
      * @return
      */
     @Bean
-    public org.apache.shiro.mgt.SecurityManager securityManager(){
+    public org.apache.shiro.mgt.SecurityManager securityManager(Environment e){
+        init(e);
         DefaultWebSecurityManager securityManager=new DefaultWebSecurityManager ();
         //设置realm
         securityManager.setRealm(shiroRealm());
@@ -90,7 +102,6 @@ public class ShiroConfiguration {
         sessionManager.setSessionListeners(listeners);
         sessionManager.setSessionDAO(redisSessionDAO());
         sessionManager.setCacheManager(redisCacheManager());
-
         //全局会话超时时间（单位毫秒），默认30分钟  暂时设置为10秒钟 用来测试
         sessionManager.setGlobalSessionTimeout(1800000);
         //是否开启删除无效的session对象  默认为true
@@ -119,8 +130,8 @@ public class ShiroConfiguration {
     @Bean
     public RedisManager redisManager() {
         RedisManager redisManager = new RedisManager();
-        redisManager.setHost("152.136.189.20:6379");
-        redisManager.setPassword("password");
+        redisManager.setHost(redisHost);
+        redisManager.setPassword(redisPassword);
         redisManager.setTimeout(10000);
         return redisManager;
     }
